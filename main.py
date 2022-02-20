@@ -15,7 +15,7 @@ CAPTION = os.environ.get("CAPTION", None)
 # Better to add caption through config vars / app.json
 
 
-@Bot.on_message(filters.media)
+@Bot.on_message(filters.command(["start"]) & filters.private & ~filters.edited)
 async def caption(bot, message):
     chat_id = message.chat.id
     if CAPTION:
@@ -24,7 +24,7 @@ async def caption(bot, message):
         caption = await get_caption(bot, message)
         if caption is True:
             return
-        await message.copy(chat_id=chat_id, caption=caption, reply_to_message_id=message.message_id)
+        await message.reply_to_message.copy(chat_id=chat_id, caption=caption, reply_to_message_id=message.message_id)
 
 
 async def get_caption(bot, message):
